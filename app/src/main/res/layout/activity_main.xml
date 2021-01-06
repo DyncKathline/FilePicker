@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/main_defaultMangerBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START" />
+
+    <Button
+        android:id="@+id/main_fileMangerBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SUPER" />
+
+    <Button
+        android:id="@+id/main_fragmentBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FRAGMENT" />
+
+    <Button
+        android:id="@+id/main_javaBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="JAVA" />
+
+    <include layout="@layout/layout_result_txt" />
+
+</LinearLayout>
