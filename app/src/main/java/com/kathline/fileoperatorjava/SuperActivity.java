@@ -121,6 +121,7 @@ public class SuperActivity extends AppCompatActivity {
                     case R.id.super_diyRadio: {
                         ZFileContent.getZFileHelp().setQWFileLoadListener(new MyQWFileListener());
                     }
+                    break;
                     default: {
                         ZFileContent.getZFileHelp().setQWFileLoadListener(null);
                     }

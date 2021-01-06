@@ -113,6 +113,7 @@ public class ScaleTextureView extends TextureView {
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_POINTER_UP:
                     moveType = 0;
+                    break;
             }
         }
         return super.onTouchEvent(event);

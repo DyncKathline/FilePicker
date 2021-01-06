@@ -2,6 +2,7 @@ package com.kathline.library.listener;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
@@ -74,6 +75,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                             return o1.getFileName().toLowerCase(Locale.CHINA).compareTo(o2.getFileName().toLowerCase(Locale.CHINA));
                         }
                     });
+                    break;
                 case ZFileConfiguration.BY_DATE:
                     Collections.sort(list, new Comparator<ZFileBean>() {
                         @Override
@@ -81,6 +83,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                             return o1.getOriginalDate().compareTo(o2.getOriginalDate());
                         }
                     });
+                    break;
                 case ZFileConfiguration.BY_SIZE:
                     Collections.sort(list, new Comparator<ZFileBean>() {
                         @Override
@@ -88,6 +91,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                             return (int) (o1.getOriginaSize() - o2.getOriginaSize());
                         }
                     });
+                    break;
             }
         } else {
             switch (config.getSortordBy()) {
@@ -98,6 +102,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                             return o2.getFileName().toLowerCase(Locale.CHINA).compareTo(o1.getFileName().toLowerCase(Locale.CHINA));
                         }
                     });
+                    break;
                 case ZFileConfiguration.BY_DATE:
                     Collections.sort(list, new Comparator<ZFileBean>() {
                         @Override
@@ -105,6 +110,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                             return o2.getOriginalDate().compareTo(o1.getOriginalDate());
                         }
                     });
+                    break;
                 case ZFileConfiguration.BY_SIZE:
                     Collections.sort(list, new Comparator<ZFileBean>() {
                         @Override
@@ -112,6 +118,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                             return (int) (o2.getOriginaSize() - o1.getOriginaSize());
                         }
                     });
+                    break;
             }
         }
         return list;
