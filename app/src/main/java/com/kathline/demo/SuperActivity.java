@@ -82,7 +82,7 @@ public class SuperActivity extends AppCompatActivity {
         superWpsTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog(new String[]{ZFileContent.DOC, ZFileContent.XLS, ZFileContent.PPT, ZFileContent.PDF});
+                showDialog(new String[]{ZFileContent.PDF});
             }
         });
 

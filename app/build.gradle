@@ -29,9 +29,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation project(path: ':library')
-    implementation 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'androidx.documentfile:documentfile:1.0.1'
-    implementation project(':library')
+    implementation project(':filePicker')
 
 }

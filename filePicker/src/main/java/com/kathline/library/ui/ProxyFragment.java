@@ -71,10 +71,6 @@ public class ProxyFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (mListener != null) {
             mListener.onResult(requestCode, resultCode, data);
-        }else {
-            if(getActivity() != null) {
-                getActivity().setResult(ZFileContent.ZFILE_REQUEST_CODE, data);
-            }
         }
         // 将 Fragment 从 Activity 移除
         removeFragment(getFragmentManager(), this);

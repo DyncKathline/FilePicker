@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kathline.library.common.ZFileManageHelp;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
+import com.kathline.library.content.ZFileContent;
 import com.kathline.library.ui.ProxyListener;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class JavaSampleActivity extends AppCompatActivity {
         // 操作自定义配置
         final ZFileConfiguration configuration = new ZFileConfiguration.Build()
                 .resources(resources)
+                .fileFilterArray(new String[]{ZFileContent.PDF})
                 .boxStyle(ZFileConfiguration.STYLE1)
                 .sortordBy(ZFileConfiguration.BY_DEFAULT)
                 .maxLength(3)

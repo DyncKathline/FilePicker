@@ -20,6 +20,7 @@ import com.kathline.library.common.ZFileCommonDialog;
 import com.kathline.library.common.ZFileType;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileContent;
+import com.kathline.library.type.ApkType;
 import com.kathline.library.type.AudioType;
 import com.kathline.library.type.ImageType;
 import com.kathline.library.type.OtherType;
@@ -154,6 +155,8 @@ public class ZFileListener {
                     return new PptType();
                 case ZFileContent.PDF:
                     return new PdfType();
+                case ZFileContent.APK:
+                    return new ApkType();
                 default:
                     return new OtherType();
             }

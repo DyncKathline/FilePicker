@@ -3,7 +3,6 @@ package com.kathline.demo.diy;
 import com.kathline.library.common.ZFileType;
 import com.kathline.library.content.ZFileContent;
 import com.kathline.library.listener.ZFileListener;
-import com.kathline.library.type.ApkType;
 import com.kathline.library.util.ZFileHelp;
 
 public class MyFileTypeListener extends ZFileListener.ZFileTypeListener {
@@ -15,8 +14,6 @@ public class MyFileTypeListener extends ZFileListener.ZFileTypeListener {
             case ZFileContent.XML:
             case ZFileContent.JSON:
                 return new MyTxtType();
-            case ZFileContent.APK:
-                return new ApkType();
             default:
                 return super.getFileType(filePath);
         }
