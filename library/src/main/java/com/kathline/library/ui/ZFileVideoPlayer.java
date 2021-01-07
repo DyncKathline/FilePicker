@@ -28,8 +28,8 @@ public class ZFileVideoPlayer extends TextureView implements TextureView.Surface
     private final int IS_INIT = 0;
     private final int IS_PLAYING = 1;
     private final int IS_PAUSE = 2;
-    private int playState;
-    private int size_type;
+    private int playState = IS_INIT;
+    private int size_type = CENTER_MODE;
     /**
      * 中心裁剪模式
      */

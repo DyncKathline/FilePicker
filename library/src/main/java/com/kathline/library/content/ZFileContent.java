@@ -67,6 +67,8 @@ public class ZFileContent {
     public static final String PDF = "pdf";
     
     public static final String ZIP = "zip";
+
+    public static final String APK = "apk";
     /** 图片 */
     public static final int ZFILE_QW_PIC = 0;
     /** 媒体 */

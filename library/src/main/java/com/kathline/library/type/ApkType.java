@@ -1,4 +1,4 @@
-package com.kathline.fileoperatorjava.diy;
+package com.kathline.library.type;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.kathline.fileoperatorjava.R;
+import com.kathline.library.R;
 import com.kathline.library.common.ZFileType;
 
 /**
@@ -40,7 +40,7 @@ public class ApkType extends ZFileType {
                 pic.setImageDrawable(packageInfo.applicationInfo.loadIcon(packageManager));
             }
         } catch (Throwable ignore) {
-            pic.setImageResource(R.mipmap.ic_launcher_round);
+            pic.setImageResource(R.drawable.ic_launcher);
         }
     }
 }
