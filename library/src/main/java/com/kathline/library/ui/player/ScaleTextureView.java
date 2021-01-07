@@ -11,7 +11,6 @@ import android.view.TextureView;
  * <p>
  * 同时也可以换成继承 RelativeLayout 或其它View,这样内部包含的view也会一起跟着变化
  * <p>
- * Created by Super on 2020/5/5.
  */
 public class ScaleTextureView extends TextureView {
 

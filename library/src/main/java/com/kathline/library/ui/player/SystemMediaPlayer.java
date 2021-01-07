@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 系统播放器 MediaPlayer
- * Created by Super on 2020/7/14.
  */
 public abstract class SystemMediaPlayer extends BaseMediaPlayer {
 

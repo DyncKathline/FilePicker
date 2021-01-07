@@ -4,7 +4,6 @@ import android.view.Surface;
 
 /**
  * 播放器基础接口
- * Created by Super on 2020/4/26.
  */
 public interface IMediaPlayer {
 

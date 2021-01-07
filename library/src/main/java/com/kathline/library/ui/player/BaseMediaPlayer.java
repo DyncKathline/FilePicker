@@ -4,7 +4,6 @@ import android.view.TextureView;
 
 /**
  * 基础的 Player
- * Created by Super on 2020/7/14.
  */
 public abstract class BaseMediaPlayer implements IMediaPlayer{
 
