@@ -62,7 +62,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
     public int getItemViewType(int position) {
         if (getItem(position).isFile()) {
             return ZFileContent.FILE;
-        }else {
+        } else {
             return ZFileContent.FOLDER;
         }
     }
@@ -85,8 +85,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
                 throw new IllegalArgumentException("ZFileConfiguration boxStyle error");
         }
         CheckBox box1 = holder.getView(R.id.item_zfile_list_file_box1);
-        final Boolean box = boxMap.get(position);
-        box1.setChecked(box != null ? box : false);
+        box1.setChecked((boxMap.get(position) != null ? boxMap.get(position) : false));
         box1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,11 +93,11 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
             }
         });
         final TextView box2 = holder.getView(R.id.item_zfile_list_file_box2);
-                box2.setSelected(box != null ? box : false);
+        box2.setSelected((boxMap.get(position) != null ? boxMap.get(position) : false));
         box2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                box2.setSelected(box != null ? box : false);
+                box2.setSelected(!(boxMap.get(position) != null ? boxMap.get(position) : false));
                 boxClick(position, item);
             }
         });
@@ -114,7 +113,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(itemClickByAnim != null) {
+                if (itemClickByAnim != null) {
                     itemClickByAnim.onClick(pic, position, item);
                 }
             }
@@ -128,11 +127,11 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
         } else { // 非管理状态
             isManage = !isManage;
             notifyDataSetChanged();
-            if(qwListener != null) {
+            if (qwListener != null) {
                 qwListener.invoke(isManage, item, false);
             }
         }
-        if(changeListener != null) {
+        if (changeListener != null) {
             changeListener.change(isManage, selectData.size());
         }
     }
@@ -143,10 +142,10 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
         if (isSelect) {
             selectData.remove(item);
             boxMap.put(position, !isSelect);
-            if(changeListener != null) {
+            if (changeListener != null) {
                 changeListener.change(isManage, selectData.size());
             }
-            if(qwListener != null) {
+            if (qwListener != null) {
                 qwListener.invoke(isManage, item, false);
             }
         } else {
@@ -158,10 +157,10 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
                 if (isQW) {
                     selectData.add(item);
                     boxMap.put(position, !isSelect);
-                    if(changeListener != null) {
+                    if (changeListener != null) {
                         changeListener.change(isManage, selectData.size());
                     }
-                    if(qwListener != null) {
+                    if (qwListener != null) {
                         qwListener.invoke(isManage, item, true);
                     }
                 } else {
@@ -171,10 +170,10 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
                     } else {
                         selectData.add(item);
                         boxMap.put(position, !isSelect);
-                        if(changeListener != null) {
+                        if (changeListener != null) {
                             changeListener.change(isManage, selectData.size());
                         }
-                        if(qwListener != null) {
+                        if (qwListener != null) {
                             qwListener.invoke(isManage, item, true);
                         }
                     }
@@ -192,7 +191,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(itemClickByAnim != null) {
+                if (itemClickByAnim != null) {
                     itemClickByAnim.onClick(v, position, item);
                 }
             }
@@ -210,7 +209,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
     public void setQWLastState(ZFileBean bean) {
         int lastIndex = -1;
         for (int i = 0; i < getDatas().size(); i++) {
-            if(getItem(i) == bean) {
+            if (getItem(i) == bean) {
                 lastIndex = i;
                 break;
             }
@@ -262,10 +261,10 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
     }
 
     public void setManage(boolean value) {
-        if(isQW) {
-            if(value) {
+        if (isQW) {
+            if (value) {
                 notifyDataSetChanged();
-            }else {
+            } else {
                 selectData.clear();
                 Set<Map.Entry<Integer, Boolean>> entrySet = boxMap.entrySet();
                 for (Map.Entry<Integer, Boolean> entry : entrySet) {
@@ -273,8 +272,8 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
                 }
                 notifyDataSetChanged();
             }
-        }else {
-            if(!value) {
+        } else {
+            if (!value) {
                 selectData.clear();
                 Set<Map.Entry<Integer, Boolean>> entrySet = boxMap.entrySet();
                 for (Map.Entry<Integer, Boolean> entry : entrySet) {
@@ -287,15 +286,15 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
     }
 
     public void setDatas(List<ZFileBean> list) {
-        if(list == null || list.isEmpty()) {
+        if (list == null || list.isEmpty()) {
             clear();
-        }else {
+        } else {
             boxMap.clear();
             for (int i = 0; i < list.size(); i++) {
                 ZFileBean bean = list.get(i);
-                if(selectData == null) {
+                if (selectData == null) {
                     boxMap.put(i, false);
-                }else {
+                } else {
                     boxMap.put(i, selectData.contains(bean));
                 }
             }

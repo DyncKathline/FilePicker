@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kathline.library.common.ZFileManageHelp;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
+import com.kathline.library.ui.ProxyListener;
 
 import java.util.List;
 
@@ -40,23 +41,36 @@ public class JavaSampleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ZFileManageHelp.getInstance()
                         .setConfiguration(configuration)
-                        .start(JavaSampleActivity.this);
+                        .start(JavaSampleActivity.this, new ProxyListener() {
+                            @Override
+                            public void onResult(int requestCode, int resultCode, Intent data) {
+                                List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(requestCode, resultCode, data);
+                                if (fileList == null || fileList.size() <= 0) {
+                                    return;
+                                }
+                                StringBuilder sb = new StringBuilder();
+                                for (ZFileBean bean : fileList) {
+                                    sb.append(bean.toString()).append("\n\n");
+                                }
+                                resultTxt.setText(sb.toString());
+                            }
+                        });
             }
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(requestCode, resultCode, data);
-        if (fileList == null || fileList.size() <= 0) {
-            return;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (ZFileBean bean : fileList) {
-            sb.append(bean.toString()).append("\n\n");
-        }
-        resultTxt.setText(sb.toString());
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(requestCode, resultCode, data);
+//        if (fileList == null || fileList.size() <= 0) {
+//            return;
+//        }
+//        StringBuilder sb = new StringBuilder();
+//        for (ZFileBean bean : fileList) {
+//            sb.append(bean.toString()).append("\n\n");
+//        }
+//        resultTxt.setText(sb.toString());
+//    }
 
 }

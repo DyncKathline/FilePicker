@@ -6,12 +6,15 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
 import com.kathline.library.content.ZFileContent;
 import com.kathline.library.listener.ZFileDefaultLoadListener;
 import com.kathline.library.listener.ZFileListener;
+import com.kathline.library.ui.ProxyFragment;
+import com.kathline.library.ui.ProxyListener;
 import com.kathline.library.ui.ZFileListActivity;
 import com.kathline.library.ui.ZFileQWActivity;
 
@@ -131,19 +134,34 @@ public class ZFileManageHelp {
         return list;
     }
 
-    /**
-     * 跳转至文件管理页面
-     */
     public final void start(Object fragmentOrActivity) {
+        start(fragmentOrActivity, null);
+    }
+
+    /**
+     * 跳转至文件管理页面，如果listener为null，则在当前页面的onActivityResult()方法中回调，否则在listener中回调
+     * @param fragmentOrActivity
+     * @param listener              链式回调数据
+     */
+    public final void start(Object fragmentOrActivity, ProxyListener listener) {
+        //开启代理
+        ProxyFragment fragment = null;
+        if(listener != null && fragmentOrActivity instanceof FragmentActivity) {
+            FragmentActivity activity = (FragmentActivity) fragmentOrActivity;
+            fragment = ProxyFragment.beginRequest(activity, ZFileContent.ZFILE_REQUEST_CODE, listener);
+        }else if(listener != null && fragmentOrActivity instanceof Fragment) {
+            Fragment f = (Fragment) fragmentOrActivity;
+            fragment = ProxyFragment.beginRequest(f, ZFileContent.ZFILE_REQUEST_CODE, listener);
+        }
         switch (getConfiguration().getFilePath()) {
             case ZFileConfiguration.QQ:
-                startByQQ(fragmentOrActivity);
+                startByQQ(fragment != null ? fragment : fragmentOrActivity);
                 break;
             case ZFileConfiguration.WECHAT:
-                startByWechat(fragmentOrActivity);
+                startByWechat(fragment != null ? fragment : fragmentOrActivity);
                 break;
             default:
-                startByFileManager(fragmentOrActivity, getConfiguration().getFilePath());
+                startByFileManager(fragment != null ? fragment : fragmentOrActivity, getConfiguration().getFilePath());
         }
     }
 

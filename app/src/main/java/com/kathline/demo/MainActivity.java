@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 zFileConfig.setMaxLengthStr("老铁最多6个文件");
                 ZFileContent.getZFileHelp()
                         .setConfiguration(zFileConfig)
-                        .start(this);
+                        .start(MainActivity.this);
             }
         });
         mainFileMangerBtn.setOnClickListener(new View.OnClickListener() {

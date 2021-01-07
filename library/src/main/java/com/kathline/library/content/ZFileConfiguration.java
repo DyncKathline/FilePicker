@@ -148,7 +148,7 @@ public class ZFileConfiguration implements Serializable {
      * 打开文件需要 FileProvider 一般都是包名 + xxxFileProvider
      * 如果项目中已经存在或其他原因无法修改，请自己实现 ZFileOpenListener
      */
-    String authority = "com.zp.zfile_manager.ZFileManagerProvider";
+    String authority = "com.kathline.file_picker.ZFileManagerProvider";
 
     /**
      * 是否显示日志
@@ -458,7 +458,7 @@ public class ZFileConfiguration implements Serializable {
             this.needLongClick = true;
             this.isOnlyFileHasLongClick = true;
             this.longClickOperateTitles = new String[0];
-            this.authority = "com.zp.zfile_manager.ZFileManagerProvider";
+            this.authority = "com.kathline.file_picker.ZFileManagerProvider";
             this.showLog = true;
         }
     }
