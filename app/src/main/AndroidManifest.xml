@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.kathline.fileoperatorjava">
+    package="com.kathline.demo">
 
     <application
-        android:name=".content.App"
+        android:name="com.kathline.demo.content.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,8 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SuperActivity" />
-        <activity android:name=".FragmentSampleActivity" />
+        <activity android:name="com.kathline.demo.SuperActivity" />
+        <activity android:name="com.kathline.demo.FragmentSampleActivity" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.ZFileManagerProvider"
@@ -24,8 +24,8 @@
                 android:resource="@xml/file_manage_paths" />
         </provider>
 
-        <activity android:name=".JavaSampleActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.kathline.demo.JavaSampleActivity" />
+        <activity android:name="com.kathline.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

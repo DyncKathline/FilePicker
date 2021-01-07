@@ -1,4 +1,4 @@
-package com.kathline.fileoperatorjava.diy;
+package com.kathline.demo.diy;
 
 import com.kathline.library.common.ZFileType;
 import com.kathline.library.content.ZFileContent;

@@ -1,4 +1,4 @@
-package com.kathline.fileoperatorjava;
+package com.kathline.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kathline.library.common.ZFileManageHelp;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
-import com.kathline.library.content.ZFileContent;
 
 import java.util.List;
 
