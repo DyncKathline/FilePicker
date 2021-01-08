@@ -21,6 +21,7 @@ import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileContent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数据已经获取到了，具体怎么操作就交给你了！
@@ -33,15 +34,17 @@ public class SuperDialog extends DialogFragment {
     private RecyclerView superRecyclerView;
     private View view;
 
-    public static SuperDialog newInstance(ArrayList<ZFileBean> list) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("list", list);
-        SuperDialog fragment = new SuperDialog();
-        fragment.setArguments(bundle);
-        return fragment;
+    private SuperAdapter superAdapter = null;
+
+    public interface OnListener {
+        void onInit();
     }
 
-    private SuperAdapter superAdapter = null;
+    private OnListener onListener;
+
+    public void setOnListener(OnListener listener) {
+        onListener = listener;
+    }
 
     @Nullable
     @Override
@@ -85,10 +88,17 @@ public class SuperDialog extends DialogFragment {
                 dismiss();
             }
         });
-        ArrayList<ZFileBean> list = (ArrayList<ZFileBean>) getArguments().getSerializable("list");
-        superAdapter = new SuperAdapter(list);
+        superAdapter = new SuperAdapter(new ArrayList<ZFileBean>());
         superRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         superRecyclerView.setAdapter(superAdapter);
+
+        if(onListener != null) {
+            onListener.onInit();
+        }
+    }
+
+    public void setList(List<ZFileBean> list) {
+        superAdapter.setDatas(list);
     }
 
     @Override

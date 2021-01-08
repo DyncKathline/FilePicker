@@ -132,12 +132,12 @@ public class SuperActivity extends AppCompatActivity {
         superInnerTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    ZFileConfiguration zFileConfig = ZFileContent.getZFileConfig();
-                    zFileConfig.setNeedLongClick(false);
-                    zFileConfig.setOnlyFolder(true);
-                    zFileConfig.setSortordBy(ZFileConfiguration.BY_NAME);
-                    zFileConfig.setSortord(ZFileConfiguration.ASC);
-                    ZFileContent.getZFileHelp().setConfiguration(zFileConfig).start(SuperActivity.this);
+                ZFileConfiguration zFileConfig = ZFileContent.getZFileConfig();
+                zFileConfig.setNeedLongClick(false);
+                zFileConfig.setOnlyFolder(true);
+                zFileConfig.setSortordBy(ZFileConfiguration.BY_NAME);
+                zFileConfig.setSortord(ZFileConfiguration.ASC);
+                ZFileContent.getZFileHelp().setConfiguration(zFileConfig).start(SuperActivity.this);
             }
         });
     }
@@ -174,26 +174,26 @@ public class SuperActivity extends AppCompatActivity {
     }
 
     private void showDialog(String[] filterArray) {
-        if(dialog != null) {
+        if (dialog != null) {
             dialog.show();
         }
         new ZFileAsyncImpl(this, new ZFileAsync.CallBack() {
             @Override
-            public void invoke(List<ZFileBean> list) {
-                if(dialog != null) {
+            public void invoke(final List<ZFileBean> list) {
+                if (dialog != null) {
                     dialog.dismiss();
                 }
                 if (list == null || list.isEmpty()) {
-                    Toast.makeText(SuperActivity.this,"暂无数据", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuperActivity.this, "暂无数据", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (list.size() > 100){
-                        Log.e("ZFileManager", "这里考虑到传值大小限制，截取前100条数据");
-                        SuperDialog.newInstance(changeList(list))
-                                .show(getSupportFragmentManager(), "SuperDialog");
-                    } else{
-                        SuperDialog.newInstance((ArrayList<ZFileBean>) list)
-                                .show(getSupportFragmentManager(), "SuperDialog");
-                    }
+                    final SuperDialog dialog = new SuperDialog();
+                    dialog.setOnListener(new SuperDialog.OnListener() {
+                        @Override
+                        public void onInit() {
+                            dialog.setList(list);
+                        }
+                    });
+                    dialog.show(getSupportFragmentManager(), "SuperDialog");
                 }
             }
         }).start(filterArray);

@@ -251,53 +251,13 @@ public final class ZFileUtil {
      */
     private static boolean extractFile(String zipFileName, String outPutDir) {
         boolean flag = true;
-        ZipInputStream zipInputStream = null;
-        ZipEntry zipEntry;
-        FileOutputStream outputStream = null;
-        String name;
         try {
-            zipInputStream = new ZipInputStream(new FileInputStream(zipFileName));
-            zipEntry = zipInputStream.getNextEntry();
-            while (zipEntry != null) {
-                name = zipEntry.getName();
-                if (zipEntry.isDirectory()) {
-                    name = name.substring(0, name.length() - 1);
-                    File file = new File(outPutDir + File.separator + name);
-                    file.mkdirs();
-                } else {
-                    File file = new File(outPutDir + File.separator + name);
-                    file.createNewFile();
-                    outputStream = new FileOutputStream(file);
-                    int ch = 0;
-                    byte[] bytes = new byte[1024];
-                    while (ch != -1) {
-                        ch = zipInputStream.read(bytes);
-                        outputStream.write(bytes, 0, ch);
-                        outputStream.flush();
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
+            ZipUtils.unZipFolder(zipFileName, outPutDir);
+        } catch (Exception e) {
             e.printStackTrace();
             flag = false;
-            ZFileLog.e("解压失败（目前解压只支持压缩包里只有一个文件，多个需要自己实现）");
-        } finally {
-            if(outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                if (zipInputStream != null) {
-                    zipInputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return flag;
         }
+        return flag;
     }
 
     /**

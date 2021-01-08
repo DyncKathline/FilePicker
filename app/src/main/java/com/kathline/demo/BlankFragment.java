@@ -44,7 +44,7 @@ public class BlankFragment extends Fragment {
         framgentStartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZFileContent.getZFileHelp().start(this);
+                ZFileContent.getZFileHelp().start(getActivity());
             }
         });
         framgentWechatBtn.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +52,7 @@ public class BlankFragment extends Fragment {
             public void onClick(View v) {
                 ZFileConfiguration zFileConfig = ZFileContent.getZFileConfig();
                 zFileConfig.setFilePath(ZFileConfiguration.WECHAT);
-                ZFileContent.getZFileHelp().setConfiguration(zFileConfig).start(this);
+                ZFileContent.getZFileHelp().setConfiguration(zFileConfig).start(getActivity());
             }
         });
     }

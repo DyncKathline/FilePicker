@@ -36,6 +36,12 @@ public class SuperAdapter extends RecyclerView.Adapter<SuperAdapter.SuperViewHol
         return datas.get(position);
     }
 
+    public void setDatas(List<ZFileBean> list) {
+        datas.clear();
+        datas.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public void onBindViewHolder(@NonNull SuperAdapter.SuperViewHolder holder, final int position) {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -31,7 +31,7 @@ public class JavaSampleActivity extends AppCompatActivity {
         // 操作自定义配置
         final ZFileConfiguration configuration = new ZFileConfiguration.Build()
                 .resources(resources)
-                .fileFilterArray(new String[]{ZFileContent.PDF})
+//                .fileFilterArray(new String[]{ZFileContent.PDF})
                 .boxStyle(ZFileConfiguration.STYLE1)
                 .sortordBy(ZFileConfiguration.BY_DEFAULT)
                 .maxLength(3)

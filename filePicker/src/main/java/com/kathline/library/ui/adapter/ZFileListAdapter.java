@@ -292,7 +292,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
             boxMap.clear();
             for (int i = 0; i < list.size(); i++) {
                 ZFileBean bean = list.get(i);
-                if (selectData == null) {
+                if (selectData == null || selectData.isEmpty()) {
                     boxMap.put(i, false);
                 } else {
                     boxMap.put(i, selectData.contains(bean));

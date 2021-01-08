@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ZFileBean implements Serializable, Parcelable {
     private String fileName;
@@ -120,4 +121,23 @@ public class ZFileBean implements Serializable, Parcelable {
             return new ZFileBean[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ZFileBean bean = (ZFileBean) o;
+        return isFile == bean.isFile &&
+                originaSize == bean.originaSize &&
+                Objects.equals(fileName, bean.fileName) &&
+                Objects.equals(filePath, bean.filePath) &&
+                Objects.equals(date, bean.date) &&
+                Objects.equals(originalDate, bean.originalDate) &&
+                Objects.equals(size, bean.size);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fileName, isFile, filePath, date, originalDate, size, originaSize);
+    }
 }
