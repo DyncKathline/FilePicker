@@ -1,5 +1,7 @@
 package com.kathline.library.util;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +10,7 @@ import android.content.pm.PermissionInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -158,6 +161,22 @@ public class PermissionUtil {
         }
 
         /**
+         * 是否有存储权限
+         */
+        boolean isGrantedStoragePermission(Context context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // android11
+                return Environment.isExternalStorageManager();
+            }
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+            for (String permission : permissions) {
+                if (!(ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
          * 申请权限
          * @param permissions 需要申请的权限
          */
@@ -166,7 +185,14 @@ public class PermissionUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 //找出所有未授权的权限
                 for (String permission : permissions) {
-                    if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                    if(permission.contains(Manifest.permission.MANAGE_EXTERNAL_STORAGE) && !isGrantedStoragePermission(getActivity())) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // android11
+                            // 跳转到存储权限设置界面
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                            intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                            startActivityForResult(intent, PERMISSIONS_REQUEST_CODE);
+                        }
+                    } else if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                         requestPermissionList.add(permission);
                     }
                 }
@@ -228,7 +254,6 @@ public class PermissionUtil {
             }
 
         }
-
 
         /**
          * 权限全部已经授权

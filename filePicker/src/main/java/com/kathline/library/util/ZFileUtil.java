@@ -325,18 +325,20 @@ public final class ZFileUtil {
             }
         }
 
-        for (File it: listFiles) {
-            if (!it.isHidden()) {
-                ZFileBean bean = new ZFileBean(
-                        it.getName(),
-                        it.isFile(),
-                        it.getPath(),
-                        ZFileOtherUtil.getFormatFileDate(it.lastModified()),
-                        it.lastModified() + "",
-                        getFileSize(it.length()),
-                        it.length()
-                );
-                list.add(bean);
+        if(listFiles != null) {
+            for (File it: listFiles) {
+                if (!it.isHidden()) {
+                    ZFileBean bean = new ZFileBean(
+                            it.getName(),
+                            it.isFile(),
+                            it.getPath(),
+                            ZFileOtherUtil.getFormatFileDate(it.lastModified()),
+                            it.lastModified() + "",
+                            getFileSize(it.length()),
+                            it.length()
+                    );
+                    list.add(bean);
+                }
             }
         }
         Collections.sort(list, new Comparator<ZFileBean>() {
