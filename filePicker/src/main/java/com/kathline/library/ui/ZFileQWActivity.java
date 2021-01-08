@@ -1,8 +1,8 @@
 package com.kathline.library.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.ArrayMap;
@@ -26,10 +26,11 @@ import com.kathline.library.content.ZFileConfiguration;
 import com.kathline.library.content.ZFileContent;
 import com.kathline.library.content.ZFileQWBean;
 import com.kathline.library.listener.ZFileListener;
-import com.kathline.library.util.ZFilePermissionUtil;
+import com.kathline.library.util.PermissionUtil;
 import com.kathline.library.util.ZFileUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ZFileQWActivity extends ZFileActivity implements ViewPager.OnPageChangeListener {
     private Toolbar zfileQwToolBar;
@@ -147,25 +148,24 @@ public class ZFileQWActivity extends ZFileActivity implements ViewPager.OnPageCh
     }
 
     private void checkHasPermission() {
-        boolean hasPermission = ZFilePermissionUtil.hasPermission(this, ZFilePermissionUtil.WRITE_EXTERNAL_STORAGE);
-        if (hasPermission) {
-            ZFilePermissionUtil.requestPermission(this, ZFilePermissionUtil.WRITE_EXTERNAL_CODE, ZFilePermissionUtil.WRITE_EXTERNAL_STORAGE);
-        } else {
-            initAll();
-        }
-    }
+        PermissionUtil.getInstance().with(this)
+                .requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, new PermissionUtil.PermissionListener() {
+                    @Override
+                    public void onGranted() {
+                        initAll();
+                    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == ZFilePermissionUtil.WRITE_EXTERNAL_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initAll();
-            } else {
-                ZFileContent.toast(this, "权限申请失败");
-                finish();
-            }
-        }
+                    @Override
+                    public void onDenied(List<String> deniedPermission) {
+                        ZFileContent.toast(getBaseContext(), "权限申请失败");
+                        finish();
+                    }
+
+                    @Override
+                    public void onShouldShowRationale(List<String> deniedPermission) {
+
+                    }
+                });
     }
 
     @Override

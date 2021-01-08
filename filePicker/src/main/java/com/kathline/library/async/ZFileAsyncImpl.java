@@ -20,6 +20,11 @@ import java.util.List;
  * 默认的实现方式，你也可以自定义实现
  */
 public class ZFileAsyncImpl extends ZFileAsync {
+
+    public ZFileAsyncImpl(Context context, CallBack block) {
+        super(context, block);
+    }
+
     protected void onPreExecute() {
         super.onPreExecute();
         ZFileLog.i("获取文件中...");
@@ -56,11 +61,10 @@ public class ZFileAsyncImpl extends ZFileAsync {
                 }
             }
 
-            String var10000 = sb.toString();
-            String selection = var10000;
+            String selection = sb.toString();
             String sortOrder = MediaStore.Files.FileColumns.DATE_MODIFIED;
-            Context var31 = this.getContext();
-            ContentResolver resolver = var31 != null ? var31.getContentResolver() : null;
+            Context context = this.getContext();
+            ContentResolver resolver = context != null ? context.getContentResolver() : null;
             cursor = resolver != null ? resolver.query(fileUri, projection, selection, (String[]) null, sortOrder) : null;
             if (cursor != null && cursor.moveToLast()) {
                 do {
@@ -85,10 +89,6 @@ public class ZFileAsyncImpl extends ZFileAsync {
 
             return list;
         }
-    }
-
-    public ZFileAsyncImpl(Context context, CallBack block) {
-        super(context, block);
     }
 }
 

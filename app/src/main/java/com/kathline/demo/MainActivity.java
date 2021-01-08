@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
 import com.kathline.library.content.ZFileContent;
+import com.kathline.library.util.PermissionUtil;
 
 import java.util.List;
 
@@ -50,16 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mainFileMangerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    boolean hasPermission = hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    if (hasPermission) {
-                        requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    } else {
-                        jump();
-                    }
-                } else {
-                    jump();
-                }
+                jump();
             }
         });
         mainFragmentBtn.setOnClickListener(new View.OnClickListener() {
@@ -100,23 +92,4 @@ public class MainActivity extends AppCompatActivity {
         mainResultTxt.setText(sb.toString());
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                jump();
-            } else {
-                Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private boolean hasPermission(String permissions) {
-        return ContextCompat.checkSelfPermission(this, permissions) != PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission(String requestPermission) {
-        ActivityCompat.requestPermissions(this, new String[]{requestPermission}, 100);
-    }
 }

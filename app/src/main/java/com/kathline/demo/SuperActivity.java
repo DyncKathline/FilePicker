@@ -1,5 +1,6 @@
 package com.kathline.demo;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.kathline.library.async.ZFileAsyncImpl;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
 import com.kathline.library.content.ZFileContent;
+import com.kathline.library.util.PermissionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +84,7 @@ public class SuperActivity extends AppCompatActivity {
         superWpsTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog(new String[]{ZFileContent.PDF});
+                showDialog(new String[]{ ZFileContent.DOC,  ZFileContent.XLS,  ZFileContent.PPT, ZFileContent.PDF});
             }
         });
 
@@ -173,30 +175,46 @@ public class SuperActivity extends AppCompatActivity {
         ZFileContent.getZFileHelp().setConfiguration(zFileConfig).start(this);
     }
 
-    private void showDialog(String[] filterArray) {
-        if (dialog != null) {
-            dialog.show();
-        }
-        new ZFileAsyncImpl(this, new ZFileAsync.CallBack() {
-            @Override
-            public void invoke(final List<ZFileBean> list) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (list == null || list.isEmpty()) {
-                    Toast.makeText(SuperActivity.this, "暂无数据", Toast.LENGTH_SHORT).show();
-                } else {
-                    final SuperDialog dialog = new SuperDialog();
-                    dialog.setOnListener(new SuperDialog.OnListener() {
-                        @Override
-                        public void onInit() {
-                            dialog.setList(list);
+    private void showDialog(final String[] filterArray) {
+        PermissionUtil.getInstance().with(this)
+                .requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, new PermissionUtil.PermissionListener() {
+                    @Override
+                    public void onGranted() {
+                        if (dialog != null) {
+                            dialog.show();
                         }
-                    });
-                    dialog.show(getSupportFragmentManager(), "SuperDialog");
-                }
-            }
-        }).start(filterArray);
+                        new ZFileAsyncImpl(SuperActivity.this, new ZFileAsync.CallBack() {
+                            @Override
+                            public void invoke(final List<ZFileBean> list) {
+                                if (dialog != null) {
+                                    dialog.dismiss();
+                                }
+                                if (list == null || list.isEmpty()) {
+                                    Toast.makeText(SuperActivity.this, "暂无数据", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    final SuperDialog dialog = new SuperDialog();
+                                    dialog.setOnListener(new SuperDialog.OnListener() {
+                                        @Override
+                                        public void onInit() {
+                                            dialog.setList(list);
+                                        }
+                                    });
+                                    dialog.show(getSupportFragmentManager(), "SuperDialog");
+                                }
+                            }
+                        }).start(filterArray);
+                    }
+
+                    @Override
+                    public void onDenied(List<String> deniedPermission) {
+                        ZFileContent.toast(getBaseContext(), "权限申请失败");
+                    }
+
+                    @Override
+                    public void onShouldShowRationale(List<String> deniedPermission) {
+
+                    }
+                });
     }
 
     private ArrayList<ZFileBean> changeList(List<ZFileBean> oldList) {

@@ -1,8 +1,8 @@
 package com.kathline.library.ui;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.kathline.library.Function;
-import com.kathline.library.Function1;
 import com.kathline.library.Function2;
 import com.kathline.library.Function3;
 import com.kathline.library.R;
@@ -35,8 +33,8 @@ import com.kathline.library.content.ZFilePathBean;
 import com.kathline.library.ui.adapter.ZFileListAdapter;
 import com.kathline.library.ui.dialog.ZFileSelectFolderDialog;
 import com.kathline.library.ui.dialog.ZFileSortDialog;
+import com.kathline.library.util.PermissionUtil;
 import com.kathline.library.util.ZFileLog;
-import com.kathline.library.util.ZFilePermissionUtil;
 import com.kathline.library.util.ZFileUtil;
 
 import java.io.File;
@@ -490,29 +488,24 @@ public class ZFileListActivity extends ZFileActivity {
     }
 
     private void checkHasPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            boolean hasPermission = ZFilePermissionUtil.hasPermission(this, ZFilePermissionUtil.WRITE_EXTERNAL_STORAGE);
-            if (hasPermission) {
-                ZFilePermissionUtil.requestPermission(this, ZFilePermissionUtil.WRITE_EXTERNAL_CODE, ZFilePermissionUtil.WRITE_EXTERNAL_STORAGE);
-            } else {
-                initAll();
-            }
-        } else {
-            initAll();
-        }
-    }
+        PermissionUtil.getInstance().with(this)
+                .requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, new PermissionUtil.PermissionListener() {
+                    @Override
+                    public void onGranted() {
+                        initAll();
+                    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == ZFilePermissionUtil.WRITE_EXTERNAL_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initAll();
-            } else {
-                ZFileContent.toast(this, "权限申请失败");
-                finish();
-            }
-        }
+                    @Override
+                    public void onDenied(List<String> deniedPermission) {
+                        ZFileContent.toast(getBaseContext(), "权限申请失败");
+                        finish();
+                    }
+
+                    @Override
+                    public void onShouldShowRationale(List<String> deniedPermission) {
+
+                    }
+                });
     }
 
     private void setSortSelectId() {
