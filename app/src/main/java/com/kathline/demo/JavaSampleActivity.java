@@ -8,13 +8,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kathline.library.common.ZFileManageHelp;
+import com.kathline.library.content.MimeType;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
 import com.kathline.library.content.ZFileContent;
 import com.kathline.library.ui.ProxyListener;
 
 import java.util.List;
-
 
 public class JavaSampleActivity extends AppCompatActivity {
 
@@ -28,10 +28,12 @@ public class JavaSampleActivity extends AppCompatActivity {
         // 图片显示自定义配置
         ZFileConfiguration.ZFileResources resources = new ZFileConfiguration.ZFileResources();
         resources.setAudioRes(R.drawable.ic_diy_yp);
+        boolean useSAF = true;
         // 操作自定义配置
         final ZFileConfiguration configuration = new ZFileConfiguration.Build()
                 .resources(resources)
-//                .fileFilterArray(new String[]{ZFileContent.PDF})
+                .useSAF(useSAF)
+//                .fileFilterArray(useSAF ? new String[]{MimeType.TYPE_pdf} : new String[]{ZFileContent.PDF})
                 .boxStyle(ZFileConfiguration.STYLE1)
                 .sortordBy(ZFileConfiguration.BY_DEFAULT)
                 .maxLength(3)
@@ -46,7 +48,7 @@ public class JavaSampleActivity extends AppCompatActivity {
                         .start(JavaSampleActivity.this, new ProxyListener() {
                             @Override
                             public void onResult(int requestCode, int resultCode, Intent data) {
-                                List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(requestCode, resultCode, data);
+                                List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(getBaseContext(), requestCode, resultCode, data);
                                 if (fileList == null || fileList.size() <= 0) {
                                     return;
                                 }

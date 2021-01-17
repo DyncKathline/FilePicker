@@ -41,14 +41,10 @@ public class ZFileAsyncImpl extends ZFileAsync {
 
     private final List<ZFileBean> getLocalData(String[] filterArray) {
         ArrayList<ZFileBean> list = new ArrayList<>();
-        Cursor cursor = (Cursor) null;
+        Cursor cursor = null;
 
         try {
             Uri fileUri = MediaStore.Files.getContentUri("external");
-            String[] projection = new String[]{MediaStore.Files.FileColumns.DATA,
-                    MediaStore.Files.FileColumns.TITLE,
-                    MediaStore.Files.FileColumns.SIZE,
-                    MediaStore.Files.FileColumns.DATE_MODIFIED};
             StringBuilder sb = new StringBuilder();
             int length = filterArray.length;
 
@@ -65,9 +61,9 @@ public class ZFileAsyncImpl extends ZFileAsync {
             String sortOrder = MediaStore.Files.FileColumns.DATE_MODIFIED;
             Context context = this.getContext();
             ContentResolver resolver = context != null ? context.getContentResolver() : null;
-            cursor = resolver != null ? resolver.query(fileUri, projection, selection, (String[]) null, sortOrder) : null;
-            if (cursor != null && cursor.moveToLast()) {
-                do {
+            cursor = resolver != null ? resolver.query(fileUri, null, selection, null, sortOrder) : null;
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
                     String path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
                     long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE));
                     long date = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED));
@@ -78,7 +74,7 @@ public class ZFileAsyncImpl extends ZFileAsync {
 
                         list.add(new ZFileBean(name, true, path, lastModified, String.valueOf(date), fileSize, size));
                     }
-                } while (cursor.moveToPrevious());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

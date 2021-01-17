@@ -151,14 +151,18 @@ public class ZFileConfiguration implements Serializable {
     String authority = "com.kathline.file_picker.ZFileManagerProvider";
 
     /**
+     * 是否使用StorageAccessFramework，Android 11以后推荐使用
+     */
+    boolean useSAF = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R;
+
+    /**
      * 是否显示日志
      */
     boolean showLog = true;
 
     public ZFileConfiguration() {
         this.filePath = "";
-        this.resources = new ZFileConfiguration.ZFileResources();
-        this.fileFilterArray = new String[0];
+        this.resources = new ZFileResources();
         this.maxSizeStr = "您只能选取小于" + this.maxSize + "M的文件";
         this.maxLength = 9;
         this.maxLengthStr = "您最多可以选取" + this.maxLength + "个文件";
@@ -306,6 +310,14 @@ public class ZFileConfiguration implements Serializable {
         this.authority = authority;
     }
 
+    public boolean isUseSAF() {
+        return useSAF;
+    }
+
+    public void setUseSAF(boolean useSAF) {
+        this.useSAF = useSAF;
+    }
+
     public boolean isShowLog() {
         return showLog;
     }
@@ -316,7 +328,7 @@ public class ZFileConfiguration implements Serializable {
 
     public static final class Build {
         private String filePath = "";
-        private ZFileConfiguration.ZFileResources resources;
+        private ZFileResources resources;
         private boolean showHiddenFile;
         private int sortordBy = 4096;
         private int sortord = 8193;
@@ -332,125 +344,132 @@ public class ZFileConfiguration implements Serializable {
         private boolean isOnlyFolder;
         private boolean isOnlyFile;
         private String authority;
+        private boolean useSAF;
         private boolean showLog;
 
-        public final ZFileConfiguration.Build filePath(String filePath) {
+        public final Build filePath(String filePath) {
             this.filePath = filePath;
             return this;
         }
 
-        public final ZFileConfiguration.Build resources(ZFileConfiguration.ZFileResources resources) {
+        public final Build resources(ZFileResources resources) {
             this.resources = resources;
             return this;
         }
 
-        public final ZFileConfiguration.Build showHiddenFile(boolean showHiddenFile) {
+        public final Build showHiddenFile(boolean showHiddenFile) {
             this.showHiddenFile = showHiddenFile;
             return this;
         }
 
-        public final ZFileConfiguration.Build sortordBy(int sortordBy) {
+        public final Build sortordBy(int sortordBy) {
             this.sortordBy = sortordBy;
             return this;
         }
 
-        public final ZFileConfiguration.Build sortord(int sortord) {
+        public final Build sortord(int sortord) {
             this.sortord = sortord;
             return this;
         }
 
-        public final ZFileConfiguration.Build fileFilterArray(String[] fileFilterArray) {
+        public final Build fileFilterArray(String[] fileFilterArray) {
             this.fileFilterArray = fileFilterArray;
             return this;
         }
 
-        public final ZFileConfiguration.Build maxSize(int maxSize) {
+        public final Build maxSize(int maxSize) {
             this.maxSize = maxSize;
             return this;
         }
 
-        public final ZFileConfiguration.Build maxSizeStr(String maxSizeStr) {
+        public final Build maxSizeStr(String maxSizeStr) {
             this.maxSizeStr = maxSizeStr;
             return this;
         }
 
-        public final ZFileConfiguration.Build maxLength(int maxLength) {
+        public final Build maxLength(int maxLength) {
             this.maxLength = maxLength;
             return this;
         }
 
-        public final ZFileConfiguration.Build maxLengthStr(String maxLengthStr) {
+        public final Build maxLengthStr(String maxLengthStr) {
             this.maxLengthStr = maxLengthStr;
             return this;
         }
 
-        public final ZFileConfiguration.Build boxStyle(int boxStyle) {
+        public final Build boxStyle(int boxStyle) {
             this.boxStyle = boxStyle;
             return this;
         }
 
-        public final ZFileConfiguration.Build needLongClick(boolean needLongClick) {
+        public final Build needLongClick(boolean needLongClick) {
             this.needLongClick = needLongClick;
             return this;
         }
 
-        public final ZFileConfiguration.Build isOnlyFileHasLongClick(boolean isOnlyFileHasLongClick) {
+        public final Build isOnlyFileHasLongClick(boolean isOnlyFileHasLongClick) {
             this.isOnlyFileHasLongClick = isOnlyFileHasLongClick;
             return this;
         }
 
-        public final ZFileConfiguration.Build longClickOperateTitles(String[] longClickOperateTitles) {
+        public final Build longClickOperateTitles(String[] longClickOperateTitles) {
             this.longClickOperateTitles = longClickOperateTitles;
             return this;
         }
 
-        public final ZFileConfiguration.Build isOnlyFolder(boolean isOnlyFolder) {
+        public final Build isOnlyFolder(boolean isOnlyFolder) {
             this.isOnlyFolder = isOnlyFolder;
             return this;
         }
 
-        public final ZFileConfiguration.Build isOnlyFile(boolean isOnlyFile) {
+        public final Build isOnlyFile(boolean isOnlyFile) {
             this.isOnlyFile = isOnlyFile;
             return this;
         }
 
-        public final ZFileConfiguration.Build authority(String authority) {
+        public final Build authority(String authority) {
             this.authority = authority;
             return this;
         }
 
-        public final ZFileConfiguration.Build showLog(boolean showLog) {
+        public final Build useSAF(boolean useSAF) {
+            this.useSAF = useSAF;
+            return this;
+        }
+
+        public final Build showLog(boolean showLog) {
             this.showLog = showLog;
             return this;
         }
 
         public final ZFileConfiguration build() {
-            ZFileConfiguration var1 = new ZFileConfiguration();
-            var1.setFilePath(this.filePath);
-            var1.setResources(this.resources);
-            var1.setShowHiddenFile(this.showHiddenFile);
-            var1.setSortordBy(this.sortordBy);
-            var1.setSortord(this.sortord);
-            var1.setFileFilterArray(this.fileFilterArray);
-            var1.setMaxSize(this.maxSize);
-            var1.setMaxSizeStr(this.maxSizeStr);
-            var1.setMaxLength(this.maxLength);
-            var1.setMaxLengthStr(this.maxLengthStr);
-            var1.setBoxStyle(this.boxStyle);
-            var1.setNeedLongClick(this.needLongClick);
-            var1.setOnlyFileHasLongClick(this.isOnlyFileHasLongClick);
-            var1.setLongClickOperateTitles(this.longClickOperateTitles);
-            var1.setOnlyFolder(this.isOnlyFolder);
-            var1.setOnlyFile(this.isOnlyFile);
-            var1.setAuthority(this.authority);
-            var1.setShowLog(this.showLog);
-            return var1;
+            ZFileConfiguration configuration = new ZFileConfiguration();
+            configuration.setFilePath(this.filePath);
+            configuration.setResources(this.resources);
+            configuration.setShowHiddenFile(this.showHiddenFile);
+            configuration.setSortordBy(this.sortordBy);
+            configuration.setSortord(this.sortord);
+            configuration.setFileFilterArray(this.fileFilterArray);
+            configuration.setMaxSize(this.maxSize);
+            configuration.setMaxSizeStr(this.maxSizeStr);
+            configuration.setMaxLength(this.maxLength);
+            configuration.setMaxLengthStr(this.maxLengthStr);
+            configuration.setBoxStyle(this.boxStyle);
+            configuration.setNeedLongClick(this.needLongClick);
+            configuration.setOnlyFileHasLongClick(this.isOnlyFileHasLongClick);
+            configuration.setLongClickOperateTitles(this.longClickOperateTitles);
+            configuration.setOnlyFolder(this.isOnlyFolder);
+            configuration.setOnlyFile(this.isOnlyFile);
+            configuration.setAuthority(this.authority);
+            configuration.setUseSAF(this.useSAF);
+            configuration.setShowLog(this.showLog);
+            return configuration;
         }
 
         public Build() {
             this.filePath = "";
-            this.resources = new ZFileConfiguration.ZFileResources();
-            this.fileFilterArray = new String[0];
+            this.resources = new ZFileResources();
+//            this.fileFilterArray = new String[0];
             this.maxSizeStr = "您只能选取小于" + this.maxSize + "M的文件";
             this.maxLength = 9;
             this.maxLengthStr = "您最多可以选取" + this.maxLength + "个文件";
@@ -458,7 +477,8 @@ public class ZFileConfiguration implements Serializable {
             this.needLongClick = true;
             this.isOnlyFileHasLongClick = true;
             this.longClickOperateTitles = new String[0];
-            this.authority = "com.kathline.file_picker.ZFileManagerProvider";
+//            this.authority = "com.kathline.file_picker.ZFileManagerProvider";
+            this.useSAF = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R;
             this.showLog = true;
         }
     }

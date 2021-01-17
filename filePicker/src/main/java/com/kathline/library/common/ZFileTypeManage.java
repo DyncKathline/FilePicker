@@ -10,10 +10,10 @@ import com.kathline.library.type.OtherType;
 
 public class ZFileTypeManage {
     
-    private ZFileType fileType = (ZFileType)(new OtherType());
+    private ZFileType fileType = new OtherType();
 
     public static final ZFileTypeManage getTypeManager() {
-        return ZFileTypeManage.Builder.INSTANCE.getMANAGER();
+        return Builder.INSTANCE.getMANAGER();
     }
 
     
@@ -49,7 +49,7 @@ public class ZFileTypeManage {
         
         private static final ZFileTypeManage MANAGER;
         
-        public static final ZFileTypeManage.Builder INSTANCE;
+        public static final Builder INSTANCE;
 
         
         public final ZFileTypeManage getMANAGER() {
@@ -57,8 +57,8 @@ public class ZFileTypeManage {
         }
 
         static {
-            ZFileTypeManage.Builder var0 = new ZFileTypeManage.Builder();
-            INSTANCE = var0;
+            Builder builder = new Builder();
+            INSTANCE = builder;
             MANAGER = new ZFileTypeManage();
         }
     }

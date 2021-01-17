@@ -72,6 +72,19 @@ public class ZFileBean implements Serializable, Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "ZFileBean{" +
+                "fileName='" + fileName + '\'' +
+                ", isFile=" + isFile +
+                ", filePath='" + filePath + '\'' +
+                ", date='" + date + '\'' +
+                ", originalDate='" + originalDate + '\'' +
+                ", size='" + size + '\'' +
+                ", originaSize=" + originaSize +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

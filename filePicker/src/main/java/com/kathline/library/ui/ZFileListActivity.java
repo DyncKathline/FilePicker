@@ -233,7 +233,7 @@ public class ZFileListActivity extends ZFileActivity {
                     }*/
                     ZFileUtil.openFile(bean.getFilePath(), view);
                 } else {
-                    ZFileLog.i("进入 %s", bean.getFilePath());
+                    ZFileLog.i(String.format("进入 %s", bean.getFilePath()));
                     backList.add(bean.getFilePath());
                     filePathAdapter.addItem(filePathAdapter.getItemCount(), ZFileContent.toPathBean(bean));
 //                    zfileListPathRecyclerView.scrollToPosition(filePathAdapter.getItemCount() - 1);
@@ -482,7 +482,7 @@ public class ZFileListActivity extends ZFileActivity {
             String lastPath = getThisFilePath();
             getData(lastPath);
             nowPath = lastPath;
-//            filePathAdapter.remove(filePathAdapter.getItemCount() - 1);
+            filePathAdapter.remove(filePathAdapter.getItemCount() - 1);
 //            zfileListPathRecyclerView.scrollToPosition(filePathAdapter.getItemCount() - 1);
         }
     }

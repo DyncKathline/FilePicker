@@ -1,25 +1,17 @@
 package com.kathline.demo;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
+import com.kathline.library.content.MimeType;
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
 import com.kathline.library.content.ZFileContent;
-import com.kathline.library.util.PermissionUtil;
 
 import java.util.List;
 
@@ -39,12 +31,15 @@ public class MainActivity extends AppCompatActivity {
         mainDefaultMangerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZFileConfiguration zFileConfig = ZFileContent.getZFileConfig();
-                zFileConfig.setBoxStyle(ZFileConfiguration.STYLE2);
-                zFileConfig.setMaxLength(6);
-                zFileConfig.setMaxLengthStr("老铁最多6个文件");
+                final ZFileConfiguration configuration = new ZFileConfiguration.Build()
+                        .boxStyle(ZFileConfiguration.STYLE2)
+                        .sortordBy(ZFileConfiguration.BY_DEFAULT)
+                        .maxLength(2)
+                        .maxLengthStr("亲，最多选2个！")
+                        .useSAF(false)
+                        .build();
                 ZFileContent.getZFileHelp()
-                        .setConfiguration(zFileConfig)
+                        .setConfiguration(configuration)
                         .start(MainActivity.this);
             }
         });
@@ -66,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, JavaSampleActivity.class));
             }
         });
-        initView();
     }
 
     private void initView() {
@@ -84,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        List<ZFileBean> list = ZFileContent.getZFileHelp().getSelectData(requestCode, resultCode, data);
+        List<ZFileBean> list = ZFileContent.getZFileHelp().getSelectData(getBaseContext(), requestCode, resultCode, data);
         StringBuilder sb = new StringBuilder();
         for (ZFileBean bean : list) {
             sb.append(bean).append("\n\n");

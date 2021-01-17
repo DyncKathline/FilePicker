@@ -150,7 +150,7 @@ public class ZFileSelectFolderDialog extends ZFileManageDialog {
 
     private void getData() {
         String filePath = ZFileContent.getZFileConfig().getFilePath();
-        if(TextUtils.isEmpty(filePath) || filePath == ZFileContent.getSD_ROOT()) {
+        if(TextUtils.isEmpty(filePath) || filePath.equals(ZFileContent.getSD_ROOT())) {
             zfileSelectFolderTitle.setText(String.format("%s到根目录", tipStr));
         }else {
             zfileSelectFolderTitle.setText(String.format("%s到%s", tipStr, new File(filePath).getName()));

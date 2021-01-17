@@ -1,9 +1,16 @@
 package com.kathline.library.common;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -17,13 +24,15 @@ import com.kathline.library.ui.ProxyFragment;
 import com.kathline.library.ui.ProxyListener;
 import com.kathline.library.ui.ZFileListActivity;
 import com.kathline.library.ui.ZFileQWActivity;
+import com.kathline.library.util.ZFileLog;
+import com.kathline.library.util.ZFileOtherUtil;
+import com.kathline.library.util.ZFileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.kathline.library.content.ZFileContent.ERROR_MSG;
-import static com.kathline.library.content.ZFileContent.QW_FILE_TYPE_KEY;
 
 public class ZFileManageHelp {
 
@@ -126,12 +135,90 @@ public class ZFileManageHelp {
     /**
      * 获取返回的数据
      */
-    public List<ZFileBean> getSelectData(int requestCode, int resultCode, Intent data) {
+    public List<ZFileBean> getSelectData(Context context, int requestCode, int resultCode, Intent data) {
         List<ZFileBean> list = new ArrayList<>();
-        if (requestCode == ZFileContent.ZFILE_REQUEST_CODE && resultCode == ZFileContent.ZFILE_RESULT_CODE) {
-            list = data.getParcelableArrayListExtra(ZFileContent.ZFILE_SELECT_DATA_KEY);
+        if(data == null) {
+            return list;
+        }
+        if (requestCode == ZFileContent.ZFILE_REQUEST_CODE) {
+            if(data.getClipData() != null) {
+                ClipData clipData = data.getClipData();
+                int itemCount = clipData.getItemCount();
+                for (int i = 0; i < itemCount; i++) {
+                    Uri uri = clipData.getItemAt(i).getUri();
+                    safToData(context, list, uri);
+                }
+            }else {
+                if(resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getData();
+                    safToData(context, list, uri);
+                }else if(resultCode == ZFileContent.ZFILE_RESULT_CODE) {
+                    list = data.getParcelableArrayListExtra(ZFileContent.ZFILE_SELECT_DATA_KEY);
+                }
+            }
         }
         return list;
+    }
+
+    /**
+     * SAF框架选择文件后转化为ZFileBean列表
+     * @param context
+     * @param list
+     * @param uri
+     */
+    private void safToData(Context context, List<ZFileBean> list, Uri uri) {
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+//                for (String name : cursor.getColumnNames()) {
+//                    Log.d("kath--", cursor.getColumnIndexOrThrow(name) + name);
+//                }
+                while (cursor.moveToNext()) {
+                    String path;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
+                    }else {
+                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+                    }
+//                    String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE));
+                    long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE));
+                    long date;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        date = cursor.getLong(cursor.getColumnIndex("last_modified")) / 1000;
+                    }else {
+                        date = cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED));
+                    }
+                    String fileSize = ZFileUtil.getFileSize(size);
+                    String lastModified = ZFileOtherUtil.getFormatFileDate(date * (long) 1000);
+                    if (size > 0) {
+                        String name;
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            name = path;
+                        }else {
+                            name = path.substring(path.lastIndexOf("/") + 1);
+                        }
+                        double originSize = size / 1048576d; // byte -> MB
+                        ZFileBean bean = new ZFileBean(name, true, path, lastModified, String.valueOf(date), fileSize, size);
+                        if(originSize <= config.getMaxSize()) {
+                            if(list.size() < config.getMaxLength()) {
+                                list.add(bean);
+                            }else {
+                                ZFileLog.e("超过配置的maxLength长度文件：" + bean.toString());
+                            }
+                        }else {
+                            ZFileLog.e("超过配置的maxSize大小文件：" + bean.toString());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     public final void start(Object fragmentOrActivity) {
@@ -153,15 +240,47 @@ public class ZFileManageHelp {
             Fragment f = (Fragment) fragmentOrActivity;
             fragment = ProxyFragment.beginRequest(f, ZFileContent.ZFILE_REQUEST_CODE, listener);
         }
-        switch (getConfiguration().getFilePath()) {
-            case ZFileConfiguration.QQ:
-                startByQQ(fragment != null ? fragment : fragmentOrActivity);
-                break;
-            case ZFileConfiguration.WECHAT:
-                startByWechat(fragment != null ? fragment : fragmentOrActivity);
-                break;
-            default:
-                startByFileManager(fragment != null ? fragment : fragmentOrActivity, getConfiguration().getFilePath());
+        if(getConfiguration().isUseSAF()) {
+            startSAF(fragment != null ? fragment : fragmentOrActivity);
+        }else {
+            switch (getConfiguration().getFilePath()) {
+                case ZFileConfiguration.QQ:
+                    startByQQ(fragment != null ? fragment : fragmentOrActivity);
+                    break;
+                case ZFileConfiguration.WECHAT:
+                    startByWechat(fragment != null ? fragment : fragmentOrActivity);
+                    break;
+                default:
+                    startByFileManager(fragment != null ? fragment : fragmentOrActivity, getConfiguration().getFilePath());
+            }
+        }
+    }
+
+    private void startSAF(Object context) {
+        if (context == null) return;
+        /*
+         * 隐式允许用户选择一种特定类型的数据。
+         * Same as : ACTION_GET_CONTENT , ACTION_OPEN_DOCUMENT
+         */
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, getConfiguration().getMaxLength() > 1);
+        String mimeType = "";
+        //"file/*"比"*/*"少了一些侧边栏选项
+        if (getConfiguration().getFileFilterArray() != null && getConfiguration().getFileFilterArray().length > 0) {
+            intent.setType(TextUtils.isEmpty(mimeType) ? "*/*" : mimeType);
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, getConfiguration().getFileFilterArray());
+        }
+        else {
+            intent.setType("*/*");
+        }
+        // Only return URIs that can be opened with ContentResolver
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            activity.startActivityForResult(intent, ZFileContent.ZFILE_REQUEST_CODE);
+        } else if (context instanceof Fragment) {
+            Fragment fragment = (Fragment) context;
+            fragment.startActivityForResult(intent, ZFileContent.ZFILE_REQUEST_CODE);
         }
     }
 
@@ -231,14 +350,14 @@ public class ZFileManageHelp {
         
         private static final ZFileManageHelp MANAGER;
         
-        public static final ZFileManageHelp.Builder INSTANCE;
+        public static final Builder INSTANCE;
 
         public static final ZFileManageHelp getMANAGER() {
             return MANAGER;
         }
 
         static {
-            ZFileManageHelp.Builder builder = new ZFileManageHelp.Builder();
+            Builder builder = new Builder();
             INSTANCE = builder;
             MANAGER = new ZFileManageHelp();
         }

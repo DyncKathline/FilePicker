@@ -233,7 +233,7 @@ public class SuperActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        List<ZFileBean> list = ZFileContent.getZFileHelp().getSelectData(requestCode, resultCode, data);
+        List<ZFileBean> list = ZFileContent.getZFileHelp().getSelectData(getBaseContext(), requestCode, resultCode, data);
         StringBuilder sb = new StringBuilder();
         for (ZFileBean bean : list) {
             sb.append(bean).append("\n\n");

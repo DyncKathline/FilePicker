@@ -60,7 +60,7 @@ public class BlankFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        List<ZFileBean> list = ZFileContent.getZFileHelp().getSelectData(requestCode, resultCode, data);
+        List<ZFileBean> list = ZFileContent.getZFileHelp().getSelectData(getContext(), requestCode, resultCode, data);
         StringBuilder sb = new StringBuilder();
         for (ZFileBean bean : list) {
             sb.append(bean).append("\n\n");
