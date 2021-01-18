@@ -33,7 +33,7 @@ public class JavaSampleActivity extends AppCompatActivity {
         final ZFileConfiguration configuration = new ZFileConfiguration.Build()
                 .resources(resources)
                 .useSAF(useSAF)
-//                .fileFilterArray(useSAF ? new String[]{MimeType.TYPE_pdf} : new String[]{ZFileContent.PDF})
+                .fileFilterArray(useSAF ? new String[]{MimeType.TYPE_pdf, MimeType.TYPE_image, MimeType.TYPE_video, MimeType.TYPE_audio} : new String[]{ZFileContent.PDF})
                 .boxStyle(ZFileConfiguration.STYLE1)
                 .sortordBy(ZFileConfiguration.BY_DEFAULT)
                 .maxLength(3)

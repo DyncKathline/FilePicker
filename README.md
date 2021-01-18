@@ -1,4 +1,4 @@
-[![Travis](https://img.shields.io/badge/ZFile-1.2.0-yellowgreen)](https://github.com/zippo88888888/ZFileManager)
+[![Travis](https://img.shields.io/badge/ZFile-1.2.1-yellowgreen)](https://github.com/zippo88888888/ZFileManager)
 [![Travis](https://img.shields.io/badge/API-19%2B-green)](https://github.com/zippo88888888/ZFileManager)
 [![Travis](https://img.shields.io/badge/Apache-2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 

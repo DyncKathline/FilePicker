@@ -175,40 +175,40 @@ public class ZFileManageHelp {
 //                    Log.d("kath--", cursor.getColumnIndexOrThrow(name) + name);
 //                }
                 while (cursor.moveToNext()) {
-                    String path;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
-                    }else {
+                    String path = "";
+                    boolean isDATA = false;
+                    if(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) != -1) {
                         path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+                        isDATA = true;
+                    }else if(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME) != -1) {
+                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
                     }
 //                    String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE));
                     long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE));
-                    long date;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        date = cursor.getLong(cursor.getColumnIndex("last_modified")) / 1000;
-                    }else {
+                    long date = 0;
+                    if(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED) != -1) {
                         date = cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED));
+                    }else if(cursor.getColumnIndex("last_modified") != -1) {
+                        date = cursor.getLong(cursor.getColumnIndex("last_modified")) / 1000;
                     }
                     String fileSize = ZFileUtil.getFileSize(size);
                     String lastModified = ZFileOtherUtil.getFormatFileDate(date * (long) 1000);
-                    if (size > 0) {
-                        String name;
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            name = path;
+                    String name;
+                    if(isDATA) {
+                        name = path.substring(path.lastIndexOf("/") + 1);
+                    }else {
+                        name = path;
+                    }
+                    double originSize = size / 1048576d; // byte -> MB
+                    ZFileBean bean = new ZFileBean(name, true, path, lastModified, String.valueOf(date), fileSize, size);
+                    if(originSize <= config.getMaxSize()) {
+                        if(list.size() < config.getMaxLength()) {
+                            list.add(bean);
                         }else {
-                            name = path.substring(path.lastIndexOf("/") + 1);
+                            ZFileLog.e("超过配置的maxLength长度文件：" + bean.toString());
                         }
-                        double originSize = size / 1048576d; // byte -> MB
-                        ZFileBean bean = new ZFileBean(name, true, path, lastModified, String.valueOf(date), fileSize, size);
-                        if(originSize <= config.getMaxSize()) {
-                            if(list.size() < config.getMaxLength()) {
-                                list.add(bean);
-                            }else {
-                                ZFileLog.e("超过配置的maxLength长度文件：" + bean.toString());
-                            }
-                        }else {
-                            ZFileLog.e("超过配置的maxSize大小文件：" + bean.toString());
-                        }
+                    }else {
+                        ZFileLog.e("超过配置的maxSize大小文件：" + bean.toString());
                     }
                 }
             }
@@ -263,12 +263,12 @@ public class ZFileManageHelp {
          * Same as : ACTION_GET_CONTENT , ACTION_OPEN_DOCUMENT
          */
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, getConfiguration().getMaxLength() > 1);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, config.getMaxLength() > 1);
         String mimeType = "";
         //"file/*"比"*/*"少了一些侧边栏选项
-        if (getConfiguration().getFileFilterArray() != null && getConfiguration().getFileFilterArray().length > 0) {
+        if (config.getFileFilterArray() != null && config.getFileFilterArray().length > 0) {
             intent.setType(TextUtils.isEmpty(mimeType) ? "*/*" : mimeType);
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, getConfiguration().getFileFilterArray());
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, config.getFileFilterArray());
         }
         else {
             intent.setType("*/*");
