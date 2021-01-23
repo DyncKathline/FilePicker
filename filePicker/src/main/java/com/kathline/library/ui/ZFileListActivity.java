@@ -165,8 +165,6 @@ public class ZFileListActivity extends ZFileActivity {
                 setResult(ZFileContent.ZFILE_RESULT_CODE, intent);
                 finish();
             }
-
-            showSortDialog();
         } else if (itemId == R.id.menu_zfile_px) {
             showSortDialog();
         } else if (itemId == R.id.menu_zfile_show) {
