@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 
 import com.kathline.library.content.ZFileBean;
+import com.kathline.library.util.UriUtils;
 import com.kathline.library.util.ZFileLog;
 import com.kathline.library.util.ZFileOtherUtil;
 import com.kathline.library.util.ZFileUtil;
@@ -64,7 +65,16 @@ public class ZFileAsyncImpl extends ZFileAsync {
             cursor = resolver != null ? resolver.query(fileUri, null, selection, null, sortOrder) : null;
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    String path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+                    String path = "";
+                    boolean isDATA = false;
+                    if(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) != -1) {
+                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+                        isDATA = true;
+                    }else if(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME) != -1) {
+//                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
+                        path = UriUtils.getPathByUri(context, fileUri);
+                    }
+//                    String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE));
                     long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE));
                     long date = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED));
                     String fileSize = ZFileUtil.getFileSize(size);

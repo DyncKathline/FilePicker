@@ -1,5 +1,6 @@
 package com.kathline.library.common;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
@@ -24,6 +25,8 @@ import com.kathline.library.ui.ProxyFragment;
 import com.kathline.library.ui.ProxyListener;
 import com.kathline.library.ui.ZFileListActivity;
 import com.kathline.library.ui.ZFileQWActivity;
+import com.kathline.library.util.PermissionUtil;
+import com.kathline.library.util.UriUtils;
 import com.kathline.library.util.ZFileLog;
 import com.kathline.library.util.ZFileOtherUtil;
 import com.kathline.library.util.ZFileUtil;
@@ -181,9 +184,10 @@ public class ZFileManageHelp {
                         path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
                         isDATA = true;
                     }else if(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME) != -1) {
-                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
+//                        path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
+                        path = UriUtils.getPathByUri(context, uri);
                     }
-//                    String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE));
+                    String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE));
                     long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns.SIZE));
                     long date = 0;
                     if(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATE_MODIFIED) != -1) {
@@ -241,7 +245,24 @@ public class ZFileManageHelp {
             fragment = ProxyFragment.beginRequest(f, ZFileContent.ZFILE_REQUEST_CODE, listener);
         }
         if(getConfiguration().isUseSAF()) {
-            startSAF(fragment != null ? fragment : fragmentOrActivity);
+            final ProxyFragment finalFragment = fragment;
+            PermissionUtil.getInstance().with(fragment)
+                    .requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, new PermissionUtil.PermissionListener() {
+                        @Override
+                        public void onGranted() {
+                            startSAF(finalFragment);
+                        }
+
+                        @Override
+                        public void onDenied(List<String> deniedPermission) {
+                            ZFileContent.toast(finalFragment.getContext(), "权限申请失败");
+                        }
+
+                        @Override
+                        public void onShouldShowRationale(List<String> deniedPermission) {
+
+                        }
+                    });
         }else {
             switch (getConfiguration().getFilePath()) {
                 case ZFileConfiguration.QQ:

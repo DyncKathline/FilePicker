@@ -149,7 +149,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
                 qwListener.invoke(isManage, item, false);
             }
         } else {
-            double size = item.getOriginaSize() / 1048576d; // byte -> MB
+            double size = item.getOriginalSize() / 1048576d; // byte -> MB
             if (size > config.getMaxSize()) {
                 ZFileContent.toast(context, config.getMaxSizeStr());
                 notifyItemChanged(position);

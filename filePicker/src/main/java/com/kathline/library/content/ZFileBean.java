@@ -13,7 +13,7 @@ public class ZFileBean implements Serializable, Parcelable {
     private String date;
     private String originalDate;
     private String size;
-    private long originaSize;
+    private long originalSize;
 
     public String getFileName() {
         return fileName;
@@ -63,12 +63,12 @@ public class ZFileBean implements Serializable, Parcelable {
         this.size = size;
     }
 
-    public long getOriginaSize() {
-        return originaSize;
+    public long getOriginalSize() {
+        return originalSize;
     }
 
-    public void setOriginaSize(long originaSize) {
-        this.originaSize = originaSize;
+    public void setOriginalSize(long originalSize) {
+        this.originalSize = originalSize;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ZFileBean implements Serializable, Parcelable {
                 ", date='" + date + '\'' +
                 ", originalDate='" + originalDate + '\'' +
                 ", size='" + size + '\'' +
-                ", originaSize=" + originaSize +
+                ", originaSize=" + originalSize +
                 '}';
     }
 
@@ -97,20 +97,20 @@ public class ZFileBean implements Serializable, Parcelable {
         dest.writeString(this.date);
         dest.writeString(this.originalDate);
         dest.writeString(this.size);
-        dest.writeLong(this.originaSize);
+        dest.writeLong(this.originalSize);
     }
 
     public ZFileBean() {
     }
 
-    public ZFileBean(String fileName, boolean isFile, String filePath, String date, String originalDate, String size, long originaSize) {
+    public ZFileBean(String fileName, boolean isFile, String filePath, String date, String originalDate, String size, long originalSize) {
         this.fileName = fileName;
         this.isFile = isFile;
         this.filePath = filePath;
         this.date = date;
         this.originalDate = originalDate;
         this.size = size;
-        this.originaSize = originaSize;
+        this.originalSize = originalSize;
     }
 
     protected ZFileBean(Parcel in) {
@@ -120,7 +120,7 @@ public class ZFileBean implements Serializable, Parcelable {
         this.date = in.readString();
         this.originalDate = in.readString();
         this.size = in.readString();
-        this.originaSize = in.readLong();
+        this.originalSize = in.readLong();
     }
 
     public static final Creator<ZFileBean> CREATOR = new Creator<ZFileBean>() {
@@ -141,7 +141,7 @@ public class ZFileBean implements Serializable, Parcelable {
         if (o == null || getClass() != o.getClass()) return false;
         ZFileBean bean = (ZFileBean) o;
         return isFile == bean.isFile &&
-                originaSize == bean.originaSize &&
+                originalSize == bean.originalSize &&
                 Objects.equals(fileName, bean.fileName) &&
                 Objects.equals(filePath, bean.filePath) &&
                 Objects.equals(date, bean.date) &&
@@ -151,6 +151,6 @@ public class ZFileBean implements Serializable, Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(fileName, isFile, filePath, date, originalDate, size, originaSize);
+        return Objects.hash(fileName, isFile, filePath, date, originalDate, size, originalSize);
     }
 }

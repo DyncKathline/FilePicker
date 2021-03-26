@@ -6,7 +6,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.kathline.library.Function;
-import com.kathline.library.Function1;
 import com.kathline.library.Function2;
 import com.kathline.library.Function3;
 import com.kathline.library.async.ZFileThread;
@@ -18,7 +17,6 @@ import com.kathline.library.listener.ZFileQWFilter;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -28,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public final class ZFileUtil {
 
@@ -344,7 +340,7 @@ public final class ZFileUtil {
         Collections.sort(list, new Comparator<ZFileBean>() {
             @Override
             public int compare(ZFileBean o1, ZFileBean o2) {
-                return (int) (o1.getOriginaSize() - o2.getOriginaSize());
+                return (int) (o1.getOriginalSize() - o2.getOriginalSize());
             }
         });
         return list;

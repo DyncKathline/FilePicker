@@ -2,7 +2,6 @@ package com.kathline.library.listener;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.kathline.library.content.ZFileBean;
 import com.kathline.library.content.ZFileConfiguration;
@@ -88,7 +87,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                     Collections.sort(list, new Comparator<ZFileBean>() {
                         @Override
                         public int compare(ZFileBean o1, ZFileBean o2) {
-                            return (int) (o1.getOriginaSize() - o2.getOriginaSize());
+                            return (int) (o1.getOriginalSize() - o2.getOriginalSize());
                         }
                     });
                     break;
@@ -115,7 +114,7 @@ public class ZFileDefaultLoadListener implements ZFileListener.ZFileLoadListener
                     Collections.sort(list, new Comparator<ZFileBean>() {
                         @Override
                         public int compare(ZFileBean o1, ZFileBean o2) {
-                            return (int) (o2.getOriginaSize() - o1.getOriginaSize());
+                            return (int) (o2.getOriginalSize() - o1.getOriginalSize());
                         }
                     });
                     break;
