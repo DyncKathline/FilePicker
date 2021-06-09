@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.2.4"
         vectorDrawables.useSupportLibrary = true
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -54,7 +54,7 @@ ext {
     siteUrl = '' // 项目的主页
     gitUrl = '' // Git仓库的url
 
-    libraryVersion = "1.2.3" //依赖时的VERSION
+    libraryVersion = android.defaultConfig.versionName //依赖时的VERSION
 
     developerId = 'dync'
     developerName = 'DyncKathline'
