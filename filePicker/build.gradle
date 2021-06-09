@@ -1,10 +1,5 @@
 apply plugin: 'com.android.library'
 
-ext {
-    versionCode = 6
-    versionName = "1.2.3"
-}
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -59,7 +54,7 @@ ext {
     siteUrl = '' // 项目的主页
     gitUrl = '' // Git仓库的url
 
-    libraryVersion = versionName //依赖时的VERSION
+    libraryVersion = "1.2.3" //依赖时的VERSION
 
     developerId = 'dync'
     developerName = 'DyncKathline'
@@ -69,4 +64,5 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 }
-apply from: '../bintray.gradle'
+//apply from: '../bintray.gradle'
+apply from: '../publish-mavencentral.gradle'

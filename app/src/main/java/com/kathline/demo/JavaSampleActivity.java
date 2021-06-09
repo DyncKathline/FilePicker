@@ -45,36 +45,38 @@ public class JavaSampleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ZFileManageHelp.getInstance()
                         .setConfiguration(configuration)
-                        .start(JavaSampleActivity.this, new ProxyListener() {
-                            @Override
-                            public void onResult(int requestCode, int resultCode, Intent data) {
-                                List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(getBaseContext(), requestCode, resultCode, data);
-                                if (fileList == null || fileList.size() <= 0) {
-                                    return;
-                                }
-                                StringBuilder sb = new StringBuilder();
-                                for (ZFileBean bean : fileList) {
-                                    sb.append(bean.toString()).append("\n\n");
-                                }
-                                resultTxt.setText(sb.toString());
-                            }
-                        });
+//                        .start(JavaSampleActivity.this, new ProxyListener() {
+//                            @Override
+//                            public void onResult(int requestCode, int resultCode, Intent data) {
+//                                List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(getBaseContext(), requestCode, resultCode, data);
+//                                if (fileList == null || fileList.size() <= 0) {
+//                                    return;
+//                                }
+//                                StringBuilder sb = new StringBuilder();
+//                                for (ZFileBean bean : fileList) {
+//                                    sb.append(bean.toString()).append("\n\n");
+//                                }
+//                                resultTxt.setText(sb.toString());
+//                            }
+//                        });
+                        .start(JavaSampleActivity.this, null);
+
             }
         });
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(requestCode, resultCode, data);
-//        if (fileList == null || fileList.size() <= 0) {
-//            return;
-//        }
-//        StringBuilder sb = new StringBuilder();
-//        for (ZFileBean bean : fileList) {
-//            sb.append(bean.toString()).append("\n\n");
-//        }
-//        resultTxt.setText(sb.toString());
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        List<ZFileBean> fileList = ZFileManageHelp.getInstance().getSelectData(getBaseContext(), requestCode, resultCode, data);
+        if (fileList == null || fileList.size() <= 0) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (ZFileBean bean : fileList) {
+            sb.append(bean.toString()).append("\n\n");
+        }
+        resultTxt.setText(sb.toString());
+    }
 
 }

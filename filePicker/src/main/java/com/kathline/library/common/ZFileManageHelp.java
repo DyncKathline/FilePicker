@@ -159,6 +159,22 @@ public class ZFileManageHelp {
                     list = data.getParcelableArrayListExtra(ZFileContent.ZFILE_SELECT_DATA_KEY);
                 }
             }
+        } else {
+            if(data.getClipData() != null) {
+                ClipData clipData = data.getClipData();
+                int itemCount = clipData.getItemCount();
+                for (int i = 0; i < itemCount; i++) {
+                    Uri uri = clipData.getItemAt(i).getUri();
+                    safToData(context, list, uri);
+                }
+            }else {
+                if(resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getData();
+                    safToData(context, list, uri);
+                }else if(resultCode == ZFileContent.ZFILE_RESULT_CODE) {
+                    list = data.getParcelableArrayListExtra(ZFileContent.ZFILE_SELECT_DATA_KEY);
+                }
+            }
         }
         return list;
     }
@@ -237,10 +253,10 @@ public class ZFileManageHelp {
     public final void start(Object fragmentOrActivity, ProxyListener listener) {
         //开启代理
         ProxyFragment fragment = null;
-        if(listener != null && fragmentOrActivity instanceof FragmentActivity) {
+        if(fragmentOrActivity instanceof FragmentActivity) {
             FragmentActivity activity = (FragmentActivity) fragmentOrActivity;
             fragment = ProxyFragment.beginRequest(activity, ZFileContent.ZFILE_REQUEST_CODE, listener);
-        }else if(listener != null && fragmentOrActivity instanceof Fragment) {
+        }else if(fragmentOrActivity instanceof Fragment) {
             Fragment f = (Fragment) fragmentOrActivity;
             fragment = ProxyFragment.beginRequest(f, ZFileContent.ZFILE_REQUEST_CODE, listener);
         }
