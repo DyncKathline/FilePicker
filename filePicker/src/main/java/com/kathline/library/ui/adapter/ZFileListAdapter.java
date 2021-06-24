@@ -120,7 +120,7 @@ public class ZFileListAdapter extends ZFileAdapter<ZFileBean> {
         });
     }
 
-    private void boxLayoutClick(int position, ZFileBean item) {
+    public void boxLayoutClick(int position, ZFileBean item) {
         if (isManage) { // 管理状态
             boxClick(position, item);
             notifyItemChanged(position);

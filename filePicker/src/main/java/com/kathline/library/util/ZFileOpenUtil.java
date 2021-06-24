@@ -53,12 +53,14 @@ public final class ZFileOpenUtil {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Uri contentUri;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                contentUri = FileProvider.getUriForFile(context, ZFileContent.getZFileConfig().getAuthority(), new File(filePath));
+                String authority = context.getPackageName() + ".FileProvider";
+                contentUri = FileProvider.getUriForFile(context, authority, new File(filePath));
                 intent.setDataAndType(contentUri, type);
             } else {
                 contentUri = Uri.fromFile(new File(filePath));
                 intent.setDataAndType(contentUri, type);
             }
+            context.startActivity(intent);
         } catch (Exception var12) {
             var12.printStackTrace();
             ZFileLog.e("ZFileConfiguration.authority 未设置？？？");

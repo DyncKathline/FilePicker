@@ -28,14 +28,15 @@ public class JavaSampleActivity extends AppCompatActivity {
         // 图片显示自定义配置
         ZFileConfiguration.ZFileResources resources = new ZFileConfiguration.ZFileResources();
         resources.setAudioRes(R.drawable.ic_diy_yp);
-        boolean useSAF = true;
+        boolean useSAF = android.os.Build.VERSION.SDK_INT >= 30;//android.os.Build.VERSION_CODES.R;
         // 操作自定义配置
         final ZFileConfiguration configuration = new ZFileConfiguration.Build()
                 .resources(resources)
                 .useSAF(useSAF)
-                .fileFilterArray(useSAF ? new String[]{MimeType.TYPE_pdf, MimeType.TYPE_image, MimeType.TYPE_video, MimeType.TYPE_audio} : new String[]{ZFileContent.PDF})
+                .fileFilterArray(useSAF ? new String[]{MimeType.TYPE_pdf} : new String[]{ZFileContent.PDF})
                 .boxStyle(ZFileConfiguration.STYLE1)
-                .sortordBy(ZFileConfiguration.BY_DEFAULT)
+                .sortordBy(ZFileConfiguration.BY_NAME)
+                .isManage(true)
                 .maxLength(3)
                 .maxLengthStr("亲，最多选3个！")
                 .build();

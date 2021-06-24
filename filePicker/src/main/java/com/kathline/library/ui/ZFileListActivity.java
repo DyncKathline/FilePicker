@@ -144,6 +144,7 @@ public class ZFileListActivity extends ZFileActivity {
 
     private void setMenuState() {
         Menu menu = zfileListToolBar.getMenu();
+        menu.findItem(R.id.menu_zfile_cancel).setVisible(barShow);
         menu.findItem(R.id.menu_zfile_down).setVisible(barShow);
         menu.findItem(R.id.menu_zfile_px).setVisible(!barShow);
         menu.findItem(R.id.menu_zfile_show).setVisible(!barShow);
@@ -165,7 +166,12 @@ public class ZFileListActivity extends ZFileActivity {
                 setResult(ZFileContent.ZFILE_RESULT_CODE, intent);
                 finish();
             }
-        } else if (itemId == R.id.menu_zfile_px) {
+        } else if (itemId == R.id.menu_zfile_cancel) {
+            zfileListToolBar.setTitle("文件管理");
+            fileListAdapter.setManage(false);
+            barShow = false;
+            setMenuState();
+        }  else if (itemId == R.id.menu_zfile_px) {
             showSortDialog();
         } else if (itemId == R.id.menu_zfile_show) {
             menu.setChecked(true);
@@ -224,12 +230,11 @@ public class ZFileListActivity extends ZFileActivity {
             @Override
             public void onClick(View view, int position, ZFileBean bean) {
                 if (bean.isFile()) {
-                    /*if (fileListAdapter.isManage) {
-                        fileListAdapter.boxLayoutClick(position, item)
+                    if (ZFileContent.getZFileConfig().isManage()) {
+                        fileListAdapter.boxLayoutClick(position, bean);
                     } else {
-                        ZFileUtil.openFile(item.filePath, v)
-                    }*/
-                    ZFileUtil.openFile(bean.getFilePath(), view);
+                        ZFileUtil.openFile(bean.getFilePath(), view);
+                    }
                 } else {
                     ZFileLog.i(String.format("进入 %s", bean.getFilePath()));
                     backList.add(bean.getFilePath());
@@ -243,7 +248,7 @@ public class ZFileListActivity extends ZFileActivity {
         fileListAdapter.setOnLongClickListener(new ZFileAdapter.OnLongClickListener<ZFileBean>() {
             @Override
             public boolean onLongClick(View view, int position, ZFileBean data) {
-                if (fileListAdapter.isManage()) {
+                if (ZFileContent.getZFileConfig().isManage()) {
                     return false;
                 } else {
                     if (ZFileContent.getZFileConfig().isNeedLongClick()) {
@@ -277,6 +282,7 @@ public class ZFileListActivity extends ZFileActivity {
                 }
             }
         });
+        fileListAdapter.setManage(ZFileContent.getZFileConfig().isManage());
         zfileListListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         zfileListListRecyclerView.setAdapter(fileListAdapter);
         getData(ZFileContent.getZFileConfig().getFilePath());

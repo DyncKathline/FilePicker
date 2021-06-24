@@ -117,6 +117,11 @@ public class ZFileConfiguration implements Serializable {
     int boxStyle = STYLE2;
 
     /**
+     * 是否需要点击选择文件
+     */
+    boolean isManage = false;
+
+    /**
      * 是否需要长按事件
      */
     boolean needLongClick = true;
@@ -145,12 +150,6 @@ public class ZFileConfiguration implements Serializable {
     boolean isOnlyFile = false;
 
     /**
-     * 打开文件需要 FileProvider 一般都是包名 + xxxFileProvider
-     * 如果项目中已经存在或其他原因无法修改，请自己实现 ZFileOpenListener
-     */
-    String authority = "com.kathline.file_picker.ZFileManagerProvider";
-
-    /**
      * 是否使用StorageAccessFramework，Android 11以后推荐使用
      */
     boolean useSAF = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R;
@@ -170,7 +169,6 @@ public class ZFileConfiguration implements Serializable {
         this.needLongClick = true;
         this.isOnlyFileHasLongClick = true;
         this.longClickOperateTitles = new String[0];
-        this.authority = "com.zp.zfile_manager.ZFileManagerProvider";
         this.showLog = true;
     }
 
@@ -266,6 +264,14 @@ public class ZFileConfiguration implements Serializable {
         return needLongClick;
     }
 
+    public boolean isManage() {
+        return isManage;
+    }
+
+    public void setIsManage(boolean isManage) {
+        this.isManage = isManage;
+    }
+
     public void setNeedLongClick(boolean needLongClick) {
         this.needLongClick = needLongClick;
     }
@@ -302,14 +308,6 @@ public class ZFileConfiguration implements Serializable {
         isOnlyFile = onlyFile;
     }
 
-    public String getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
-    }
-
     public boolean isUseSAF() {
         return useSAF;
     }
@@ -338,12 +336,12 @@ public class ZFileConfiguration implements Serializable {
         private int maxLength;
         private String maxLengthStr;
         private int boxStyle;
+        private boolean isManage;
         private boolean needLongClick;
         private boolean isOnlyFileHasLongClick;
         private String[] longClickOperateTitles;
         private boolean isOnlyFolder;
         private boolean isOnlyFile;
-        private String authority;
         private boolean useSAF;
         private boolean showLog;
 
@@ -402,6 +400,11 @@ public class ZFileConfiguration implements Serializable {
             return this;
         }
 
+        public final Build isManage(boolean isManage) {
+            this.isManage = isManage;
+            return this;
+        }
+
         public final Build needLongClick(boolean needLongClick) {
             this.needLongClick = needLongClick;
             return this;
@@ -424,11 +427,6 @@ public class ZFileConfiguration implements Serializable {
 
         public final Build isOnlyFile(boolean isOnlyFile) {
             this.isOnlyFile = isOnlyFile;
-            return this;
-        }
-
-        public final Build authority(String authority) {
-            this.authority = authority;
             return this;
         }
 
@@ -455,12 +453,12 @@ public class ZFileConfiguration implements Serializable {
             configuration.setMaxLength(this.maxLength);
             configuration.setMaxLengthStr(this.maxLengthStr);
             configuration.setBoxStyle(this.boxStyle);
+            configuration.setIsManage(this.isManage);
             configuration.setNeedLongClick(this.needLongClick);
             configuration.setOnlyFileHasLongClick(this.isOnlyFileHasLongClick);
             configuration.setLongClickOperateTitles(this.longClickOperateTitles);
             configuration.setOnlyFolder(this.isOnlyFolder);
             configuration.setOnlyFile(this.isOnlyFile);
-            configuration.setAuthority(this.authority);
             configuration.setUseSAF(this.useSAF);
             configuration.setShowLog(this.showLog);
             return configuration;
@@ -477,7 +475,6 @@ public class ZFileConfiguration implements Serializable {
             this.needLongClick = true;
             this.isOnlyFileHasLongClick = true;
             this.longClickOperateTitles = new String[0];
-//            this.authority = "com.kathline.file_picker.ZFileManagerProvider";
             this.useSAF = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R;
             this.showLog = true;
         }
